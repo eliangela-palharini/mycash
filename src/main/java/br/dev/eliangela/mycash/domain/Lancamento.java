@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
@@ -32,22 +31,22 @@ public class Lancamento {
 	private String descricao;
 	
 	@Column(name = "vl_lancamento", precision = 8, scale = 2)
-	@NotBlank(message = "Campo Valor é obrigatório.")
+	@NotNull(message = "Campo Valor é obrigatório.")
 	@PositiveOrZero(message = "É permitido apenas valores acima de zero.")
 	private Double valor;
 	
 	@Column(name = "dt_lancamento")
-	@NotBlank(message = "Campo Data é obrigatório.")
+	@NotNull(message = "Campo Data é obrigatório.")
 	@PastOrPresent(message = "Não é permitido data futura.")
 	private LocalDate data;
 	
 	@Column(name = "tp_lancamento")
 	@Enumerated(EnumType.STRING)
 	@NotNull(message = "Campo Tipo é obrigatório.")
+//	@Pattern(regexp = "DESPESA|RECEITA", message = "Somente tipo DESPESA / RECEITA")
 	private LancamentoTipo tipo;
 	
 	@Column(name = "in_excluido")
-	@NotBlank(message = "Campo Excluído é obrigatório.")
 	private Boolean excluido = Boolean.FALSE;
 
 	public String getDescricao() {

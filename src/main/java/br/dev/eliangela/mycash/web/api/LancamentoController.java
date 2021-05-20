@@ -2,7 +2,7 @@ package br.dev.eliangela.mycash.web.api;
 
 import java.util.List;
 
-import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,52 +15,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.dev.eliangela.mycash.domain.Lancamento;
-import br.dev.eliangela.mycash.repository.LancamentoRepository;
+import br.dev.eliangela.mycash.service.LancamentoService;
 
 @RestController
 @RequestMapping("/api/lancamento")
 public class LancamentoController {
 
 	@Autowired
-	LancamentoRepository repo;
+	private LancamentoService service;
 
 	@GetMapping
 	public List<Lancamento> todos() {
-		return repo.findAll();
+		return service.todos();
 	}
 
 	@GetMapping("/{id}")
 	public Lancamento getLancamento(@PathVariable("id") Integer id) {
-		return repo.findById(id).orElseThrow(() -> new EntityNotFoundException());
+		return service.getLancamento(id);
 	}
-	
+
 	@PostMapping
-	public Lancamento criar(@RequestBody Lancamento lancamento) {
-		return repo.save(lancamento);
+	public Lancamento criar(@Valid @RequestBody Lancamento lancamento) {
+		return service.criar(lancamento);
 	}
 
 	@PutMapping("/{id}")
-	public Lancamento atualizar(
-			@PathVariable Integer id, 
-			@RequestBody Lancamento novoLancamento) {
-		
-		return repo.findById(id).map(lancamento -> {
-			lancamento.setDescricao(novoLancamento.getDescricao());
-			lancamento.setData(novoLancamento.getData());
-			lancamento.setTipo(novoLancamento.getTipo());
-			lancamento.setValor(novoLancamento.getValor());
-			
-			return repo.save(lancamento);
-		}).orElseThrow(() -> new EntityNotFoundException());
+	public Lancamento atualizar(@PathVariable Integer id, @RequestBody Lancamento novoLancamento) {
+		return service.atualizar(id, novoLancamento);
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public void excluir(@PathVariable Integer id) {
-		repo.findById(id).map(lancamento -> {
-			lancamento.excluir();
-			
-			return repo.save(lancamento);
-		}).orElseThrow(() -> new EntityNotFoundException());
+		excluir(id);
 	}
-	
+
 }
