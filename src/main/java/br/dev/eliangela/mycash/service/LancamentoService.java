@@ -17,7 +17,7 @@ public class LancamentoService {
 	private LancamentoRepository repo;
 
 	public List<Lancamento> todos() {
-		return repo.findAll();
+		return repo.findByExcluido(false);
 	}
 
 	public Lancamento getLancamento(Integer id) {

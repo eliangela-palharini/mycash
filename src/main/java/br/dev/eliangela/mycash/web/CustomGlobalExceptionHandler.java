@@ -1,13 +1,17 @@
 package br.dev.eliangela.mycash.web;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import br.dev.eliangela.mycash.exception.UsuarioException;
 import br.dev.eliangela.mycash.web.dto.error.ApiError;
 
 @RestControllerAdvice
@@ -20,8 +24,23 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 		ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
 		apiError.setMensagem("Erro de validação.");
 		apiError.addValidationErrors(ex.getFieldErrors());
+
+		return ResponseEntity.status(apiError.getStatus()).body(apiError);
+	}
+
+	@ExceptionHandler(UsuarioException.class)
+	public ResponseEntity<ApiError> handleUsuarioException(UsuarioException ex) {
+		ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+		apiError.setMensagem(ex.getMessage());
+
+		return ResponseEntity.status(apiError.getStatus()).body(apiError);
+	}
+
+	@ExceptionHandler(EntityNotFoundException.class)
+	public ResponseEntity<ApiError> handleEntityNotFoundException(EntityNotFoundException ex) {
+		ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
+		apiError.setMensagem("Recurso não encontrado");
 		
 		return ResponseEntity.status(apiError.getStatus()).body(apiError);
 	}
-	
 }

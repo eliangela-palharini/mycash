@@ -46,7 +46,7 @@ public class LancamentoController {
 
 	@DeleteMapping("/{id}")
 	public void excluir(@PathVariable Integer id) {
-		excluir(id);
+		service.excluir(id);
 	}
 
 }

@@ -49,6 +49,10 @@ public class Lancamento {
 	@Column(name = "in_excluido")
 	private Boolean excluido = Boolean.FALSE;
 
+	public Integer getId() {
+		return id;
+	}
+	
 	public String getDescricao() {
 		return descricao;
 	}
@@ -85,4 +89,8 @@ public class Lancamento {
 		this.excluido = true;
 	}
 
+	public Boolean getExcluido() {
+		return excluido;
+	}
+	
 }
