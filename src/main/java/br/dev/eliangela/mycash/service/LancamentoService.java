@@ -1,10 +1,10 @@
 package br.dev.eliangela.mycash.service;
 
-import java.util.List;
-
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.dev.eliangela.mycash.domain.Lancamento;
@@ -16,9 +16,17 @@ public class LancamentoService {
 	@Autowired
 	private LancamentoRepository repo;
 
-	public List<Lancamento> todos() {
-		return repo.findByExcluido(false);
+//	public Page<Lancamento> todos(Pageable pageable) {
+//		return repo.findAll(pageable);
+//	}
+
+	public Page<Lancamento> todos(Pageable pageable) {
+		return repo.findByExcluido(pageable, false);
 	}
+	
+//	public List<Lancamento> todos() {
+//		return repo.findByExcluido(false);
+//	}
 
 	public Lancamento getLancamento(Integer id) {
 		return repo.findById(id).orElseThrow(() -> new EntityNotFoundException());
